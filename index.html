@@ -225,7 +225,6 @@
       flex-wrap: wrap;
     }
 
-    /* Nút có và không đồng kích thước, kiểu dáng */
     .choice {
       width: 130px;
       height: 50px;
@@ -262,6 +261,7 @@
       color: #a855f7;
     }
 
+    /* Emoji container tự do ngoài khung */
     #emojiContainer {
       position: fixed;
       bottom: 0;
@@ -270,7 +270,7 @@
       height: 100%;
       overflow: hidden;
       pointer-events: none;
-      z-index: 9999; /* đảm bảo nổi lên trên hết */
+      z-index: 99999;
     }
 
     .emoji {
@@ -324,9 +324,11 @@
         </div>
       </div>
       <div id="resultText"></div>
-      <div id="emojiContainer"></div>
     </div>
   </div>
+
+  <!-- Emoji container tách riêng ra ngoài -->
+  <div id="emojiContainer"></div>
 
 <script>
 const backBtn = document.getElementById("backBtn");
