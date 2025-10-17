@@ -20,7 +20,6 @@
       overflow: hidden;
     }
 
-    /* Nền hạt sáng */
     body::before {
       content: "";
       position: absolute;
@@ -56,7 +55,6 @@
       justify-content: center;
     }
 
-    /* Bông tuyết */
     #snow-container {
       position: absolute;
       inset: 0;
@@ -81,7 +79,6 @@
       100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
     }
 
-    /* Intro */
     #intro {
       text-align: center;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
@@ -287,15 +284,21 @@ const intro = document.getElementById("intro");
 const main = document.getElementById("main");
 const snowContainer = document.getElementById("snow-container");
 
+function resetQuestionBox() {
+  questionBox.classList.remove("fade-out-question");
+  questionBox.style.display = "";
+  questionBox.style.animation = "none";
+  questionBox.offsetHeight; // trigger reflow
+  questionBox.style.animation = "";
+  resultText.style.opacity = 0;
+  resultText.textContent = "";
+}
+
 backBtn.addEventListener("click", () => {
   main.classList.remove("show");
   main.setAttribute("aria-hidden", "true");
 
-  questionBox.classList.remove("fade-out-question");
-  questionBox.style.display = "";
-
-  resultText.style.opacity = 0;
-  resultText.textContent = "";
+  resetQuestionBox();
 
   intro.style.display = "block";
   intro.classList.remove("fade-out");
@@ -367,13 +370,8 @@ startBtn.addEventListener("click", () => {
   setTimeout(() => {
     intro.style.display = "none";
     snowContainer.style.display = "none";
-
     main.removeAttribute("style");
-    questionBox.style.display = "";
-    questionBox.classList.remove("fade-out-question");
-    resultText.style.opacity = 0;
-    resultText.textContent = "";
-
+    resetQuestionBox();
     main.classList.add("show");
     main.setAttribute("aria-hidden", "false");
     backBtn.style.display = "block";
