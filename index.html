@@ -217,30 +217,85 @@
       animation: fadeUpBounce 1s ease forwards;
     }
     #questionBox h2 { font-size: 26px; margin-bottom: 24px; }
-    .options { display: flex; justify-content: center; gap: 20px; }
-    .choice {
-      padding: 12px 28px;
-      font-size: 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      border: none;
-      color: white;
-      transition: transform 0.25s ease;
+
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
     }
-    .choice.no { background-color: rgba(255, 50, 50, 0.6); }
-    .choice.yes { background-color: rgba(50, 200, 50, 0.6); }
-    .choice:hover { transform: translateY(-3px) scale(1.05); }
-    #resultText { margin-top: 60px; font-size: 22px; opacity: 0; transition: opacity 0.8s ease; color: #a855f7; }
-    #emojiContainer { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; }
-    .emoji { position: absolute; bottom: -40px; animation: floatUp linear forwards; }
-    @keyframes floatUp { 0%{transform:translateY(0);}100%{transform:translateY(-110vh);opacity:0;} }
-    .fade-out-question { transform: scale(0.95); opacity: 0; transition: all 0.6s ease; }
+
+    /* Nút có và không đồng kích thước, kiểu dáng */
+    .choice {
+      width: 130px;
+      height: 50px;
+      font-size: 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      background-color: #000;
+      transition: all 0.25s ease;
+      font-weight: 600;
+    }
+    .choice.no {
+      border-color: #ff3333;
+      color: #ff3333;
+    }
+    .choice.no:hover {
+      background-color: rgba(255, 0, 0, 0.15);
+      transform: translateY(-3px) scale(1.05);
+    }
+    .choice.yes {
+      border-color: #00ff7f;
+      color: #00ff7f;
+    }
+    .choice.yes:hover {
+      background-color: rgba(0, 255, 127, 0.15);
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    #resultText {
+      margin-top: 60px;
+      font-size: 22px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      color: #a855f7;
+    }
+
+    #emojiContainer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 9999; /* đảm bảo nổi lên trên hết */
+    }
+
+    .emoji {
+      position: absolute;
+      bottom: -40px;
+      animation: floatUp linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-110vh); opacity: 0; }
+    }
+
+    .fade-out-question {
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.6s ease;
+    }
 
     @media (max-width: 520px) {
       h1 { font-size: 24px; }
       p.lead { font-size: 16px; }
       .button { width: 100%; font-size: 16px; padding: 10px 18px; margin: 6px 0; }
       #container { padding: 20px; }
+      .choice { width: 100%; }
     }
   </style>
 </head>
@@ -288,7 +343,7 @@ function resetQuestionBox() {
   questionBox.classList.remove("fade-out-question");
   questionBox.style.display = "";
   questionBox.style.animation = "none";
-  questionBox.offsetHeight; // trigger reflow
+  questionBox.offsetHeight;
   questionBox.style.animation = "";
   resultText.style.opacity = 0;
   resultText.textContent = "";
@@ -297,9 +352,7 @@ function resetQuestionBox() {
 backBtn.addEventListener("click", () => {
   main.classList.remove("show");
   main.setAttribute("aria-hidden", "true");
-
   resetQuestionBox();
-
   intro.style.display = "block";
   intro.classList.remove("fade-out");
   document.body.classList.remove("brighten-bg");
@@ -317,6 +370,7 @@ function spawnEmoji(symbol) {
   emojiContainer.appendChild(e);
   setTimeout(() => e.remove(), 8000);
 }
+
 function showMessage(msg) {
   resultText.textContent = msg;
   resultText.style.opacity = 1;
@@ -326,7 +380,7 @@ yesBtn.addEventListener("click", () => {
   backBtn.style.display = "none";
   questionBox.classList.add("fade-out-question");
   setTimeout(() => { questionBox.style.display = "none"; }, 600);
-  for (let i = 0; i < 12; i++) setTimeout(() => spawnEmoji("😄"), i * 200);
+  for (let i = 0; i < 15; i++) setTimeout(() => spawnEmoji("😄"), i * 150);
   setTimeout(() => showMessage("Vậy sau đây mời cô giáo cùng xem video về lịch sử ra đời ngày 20/10 nhé! :>"), 800);
 });
 
@@ -334,7 +388,7 @@ noBtn.addEventListener("click", () => {
   backBtn.style.display = "none";
   questionBox.classList.add("fade-out-question");
   setTimeout(() => { questionBox.style.display = "none"; }, 600);
-  for (let i = 0; i < 10; i++) setTimeout(() => spawnEmoji("😢"), i * 200);
+  for (let i = 0; i < 15; i++) setTimeout(() => spawnEmoji("😢"), i * 150);
   setTimeout(() => showMessage("Vậy thì ta sẽ bỏ qua video nhé!"), 800);
 });
 
