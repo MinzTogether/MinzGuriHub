@@ -1,182 +1,150 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MinzGuriHub — Intro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MinzGuriHub</title>
   <style>
-    /* Reset */
-    *{box-sizing:border-box;margin:0;padding:0}
-
-    html,body{
-      height:100%;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(135deg,#0f172a 0%, #021130 60%);
-      color:#fff;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Fullscreen intro wrapper */
-    .intro {
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:1000;
-      background: radial-gradient(ellipse at center, rgba(255,255,255,0.03), rgba(0,0,0,0.15));
-      backdrop-filter: blur(2px);
+    body {
+      height: 100vh;
+      width: 100%;
+      background: radial-gradient(circle at center, #0a0018, #000010);
+      color: white;
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
 
-    /* The "hello" text */
-    .hello {
-      font-size: clamp(40px, 12vw, 120px);
-      letter-spacing: 0.06em;
-      text-transform: lowercase;
-      transform-origin:center;
-      opacity:0;
-      display:inline-block;
-      padding: 18px 36px;
-      border-radius: 16px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-      box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 100px rgba(99,102,241,0.06) inset;
-      animation: helloInOut 3.6s cubic-bezier(.2,.9,.3,1) forwards;
+    /* Intro container */
+    #intro {
+      text-align: center;
+      animation: fadeZoom 1.8s ease forwards;
     }
 
-    @keyframes helloInOut {
-      0%   { opacity:0; transform: scale(.7) rotate(-6deg) translateY(8px); filter: blur(6px); }
-      20%  { opacity:1; transform: scale(1.05) rotate(2deg) translateY(-6px); filter: blur(0); }
-      60%  { opacity:1; transform: scale(1) rotate(0) translateY(0); }
-      100% { opacity:0; transform: scale(.8) rotate(-4deg) translateY(-12px); filter: blur(6px); }
+    @keyframes fadeZoom {
+      0% { opacity: 0; transform: scale(0.8); filter: blur(5px); }
+      50% { opacity: 1; transform: scale(1.05); filter: blur(0); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
-    /* Small sparkle effect */
-    .sparkles {
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-      z-index:999;
-    }
-    .sparkle {
-      position:absolute;
-      width:8px;
-      height:8px;
-      opacity:0;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(255,255,255,0) 100%);
-      transform: translate3d(0,0,0);
-      animation: sparkleAnim 3.6s linear forwards;
-      mix-blend-mode: screen;
-    }
-    @keyframes sparkleAnim {
-      0% { transform: translateY(20vh) scale(.4); opacity:0; }
-      10% { opacity:1; }
-      70% { opacity:.9; }
-      100% { transform: translateY(-30vh) scale(.1); opacity:0; }
+    h1 {
+      font-size: 40px;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
     }
 
-    /* Main page (hidden while intro plays) */
-    .main {
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:40px;
-      transition: opacity .6s ease, transform .6s ease;
-      opacity:0;
-      transform: translateY(12px) scale(.995);
-    }
-    .main.show {
-      opacity:1;
-      transform: translateY(0) scale(1);
+    p {
+      font-size: 26px;
+      margin-bottom: 25px;
+      color: #cfcfcf;
     }
 
-    .card {
-      max-width:900px;
-      width:100%;
-      padding:28px;
-      border-radius:14px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      box-shadow: 0 10px 40px rgba(2,6,23,0.6);
-      border: 1px solid rgba(255,255,255,0.04);
-    }
-    h1 { font-size: clamp(20px,4.8vw,44px); margin-bottom:10px; }
-    p { opacity:.85; line-height:1.5; }
-    .btn {
-      display:inline-block;
-      margin-top:18px;
-      padding:10px 18px;
-      border-radius:10px;
-      background: linear-gradient(90deg,#6366f1,#06b6d4);
-      color:#fff;
-      text-decoration:none;
-      font-weight:600;
-      box-shadow: 0 6px 20px rgba(99,102,241,0.18);
+    .button {
+      display: inline-block;
+      margin: 8px;
+      padding: 10px 26px;
+      border: 2px solid #a855f7;
+      border-radius: 10px;
+      background-color: rgba(168, 85, 247, 0.1);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    /* small responsive nicety */
-    @media (prefers-reduced-motion: reduce){
-      .hello, .sparkle { animation: none; opacity:1; transform:none; }
-      .intro { background:transparent; }
-      .main { opacity:1; transform:none; }
+    .button:hover {
+      background-color: rgba(168, 85, 247, 0.25);
+      transform: scale(1.05);
     }
+
+    /* Notification */
+    #notify {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      border: 2px solid #00ff00;
+      color: #00ff00;
+      padding: 10px 20px;
+      border-radius: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 1000;
+    }
+
+    #notify.show {
+      opacity: 1;
+    }
+
+    /* Main content */
+    #main {
+      display: none;
+      text-align: center;
+      animation: fadeInMain 0.8s ease forwards;
+    }
+
+    @keyframes fadeInMain {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #main h2 {
+      font-size: 32px;
+      color: #a855f7;
+    }
+
   </style>
 </head>
 <body>
+
+  <div id="notify">Đã copy link Facebook</div>
+
   <!-- Intro -->
-  <div class="intro" id="intro">
-    <div class="sparkles" id="sparkles"></div>
-    <span class="hello" id="hello">hello</span>
+  <div id="intro">
+    <h1>Create by: MinzGuri (Bảo 10A6)</h1>
+    <p>Facebook: Minz Guri (Minzy)</p>
+    <button class="button" id="copyBtn">Copy Facebook link</button>
+    <button class="button" id="startBtn">Start</button>
   </div>
 
-  <!-- Main content (hidden until intro finishes) -->
-  <main class="main" id="main">
-    <div class="card">
-      <h1>Chào mừng đến với MinzGuriHub</h1>
-      <p>Đây là trang demo. Intro "hello" vừa chạy xong — cậu có thể chỉnh nội dung này thành lời chúc 20/10, ảnh, hoặc bất kỳ animation nào khác.</p>
-      <a class="btn" href="#" onclick="alert('Bạn nhấn nút!')">Bấm đây</a>
-    </div>
-  </main>
+  <!-- Main content -->
+  <div id="main">
+    <h2>✨ Đây là nội dung chính của MinzGuriHub ✨</h2>
+    <p>Bạn có thể thêm intro 20/10 hoặc hiệu ứng khác tại đây.</p>
+  </div>
 
   <script>
-    // After intro animation finishes, hide the intro and reveal main
-    (function(){
-      const intro = document.getElementById('intro');
-      const main = document.getElementById('main');
-      // duration must match CSS animation length (in ms)
-      const INTRO_MS = 3600;
+    const copyBtn = document.getElementById("copyBtn");
+    const startBtn = document.getElementById("startBtn");
+    const notify = document.getElementById("notify");
+    const intro = document.getElementById("intro");
+    const main = document.getElementById("main");
 
-      // create some sparkles randomly for visual interest
-      const sparklesWrap = document.getElementById('sparkles');
-      for (let i = 0; i < 12; i++) {
-        const s = document.createElement('div');
-        s.className = 'sparkle';
-        // random left position and random delay so they float around
-        s.style.left = (Math.random()*100)+'%';
-        s.style.top  = (60 + Math.random()*40)+'%';
-        s.style.animationDelay = (Math.random()*0.6)+'s';
-        s.style.transform = `translateX(${(Math.random()-0.5)*20}vw)`;
-        s.style.opacity = 0;
-        sparklesWrap.appendChild(s);
-      }
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText("https://www.facebook.com/share/1PSmzcHWvU/")
+        .then(() => {
+          notify.classList.add("show");
+          setTimeout(() => {
+            notify.classList.remove("show");
+          }, 2000);
+        });
+    });
 
-      // reveal main after timeout
-      setTimeout(() => {
-        intro.style.display = 'none';
-        main.classList.add('show');
-      }, INTRO_MS);
-
-      // allow skipping the intro on click or keypress
-      function skipIntro(){
-        intro.style.display = 'none';
-        main.classList.add('show');
-      }
-      intro.addEventListener('click', skipIntro);
-      window.addEventListener('keydown', skipIntro);
-    })();
+    startBtn.addEventListener("click", () => {
+      intro.style.display = "none";
+      main.style.display = "block";
+    });
   </script>
+
 </body>
 </html>
