@@ -191,7 +191,6 @@
     #main h2 { font-size: 32px; color: #a855f7; margin-bottom: 8px; }
     #main p { color: #d6d6d6; }
 
-    /* Nút quay lại cố định */
     #backBtn {
       position: fixed;
       top: 20px;
@@ -207,7 +206,7 @@
       transition: all 0.25s ease;
       backdrop-filter: blur(4px);
       box-shadow: 0 0 10px rgba(168,85,247,0.3);
-      display: none; /* ẩn mặc định ở intro */
+      display: none;
     }
     #backBtn:hover { background: rgba(168,85,247,0.25); }
 
@@ -255,7 +254,6 @@
   <button id="backBtn">⬅ Quay lại</button>
 
   <div id="container">
-    <!-- Intro -->
     <div id="intro">
       <h1>Create by: MinzGuri (Bảo 10A6)</h1>
       <p class="lead">Facebook: Minz Guri (Minzy)</p>
@@ -265,7 +263,6 @@
       </div>
     </div>
 
-    <!-- Main content -->
     <div id="main">
       <div id="questionBox">
         <h2>Trước khi bắt đầu, cô có muốn xem<br>lịch sử ra đời của ngày 20/10 không ạaa?</h2>
@@ -290,10 +287,16 @@ const intro = document.getElementById("intro");
 const main = document.getElementById("main");
 const snowContainer = document.getElementById("snow-container");
 
-// Nút quay lại
 backBtn.addEventListener("click", () => {
   main.classList.remove("show");
-  main.style.display = "none";
+  main.setAttribute("aria-hidden", "true");
+
+  questionBox.classList.remove("fade-out-question");
+  questionBox.style.display = "";
+
+  resultText.style.opacity = 0;
+  resultText.textContent = "";
+
   intro.style.display = "block";
   intro.classList.remove("fade-out");
   document.body.classList.remove("brighten-bg");
@@ -301,7 +304,6 @@ backBtn.addEventListener("click", () => {
   backBtn.style.display = "none";
 });
 
-// Emoji + message
 function spawnEmoji(symbol) {
   const e = document.createElement("div");
   e.classList.add("emoji");
@@ -317,23 +319,22 @@ function showMessage(msg) {
   resultText.style.opacity = 1;
 }
 
-// Chọn Có / Không
 yesBtn.addEventListener("click", () => {
   backBtn.style.display = "none";
   questionBox.classList.add("fade-out-question");
-  setTimeout(() => questionBox.style.display = "none", 600);
+  setTimeout(() => { questionBox.style.display = "none"; }, 600);
   for (let i = 0; i < 12; i++) setTimeout(() => spawnEmoji("😄"), i * 200);
   setTimeout(() => showMessage("Vậy sau đây mời cô giáo cùng xem video về lịch sử ra đời ngày 20/10 nhé! :>"), 800);
 });
+
 noBtn.addEventListener("click", () => {
   backBtn.style.display = "none";
   questionBox.classList.add("fade-out-question");
-  setTimeout(() => questionBox.style.display = "none", 600);
+  setTimeout(() => { questionBox.style.display = "none"; }, 600);
   for (let i = 0; i < 10; i++) setTimeout(() => spawnEmoji("😢"), i * 200);
   setTimeout(() => showMessage("Vậy thì ta sẽ bỏ qua video nhé!"), 800);
 });
 
-// Intro scripts
 const copyBtn = document.getElementById("copyBtn");
 const startBtn = document.getElementById("startBtn");
 const notify = document.getElementById("notify");
@@ -362,16 +363,23 @@ copyBtn.addEventListener("click", () => {
 startBtn.addEventListener("click", () => {
   document.body.classList.add("brighten-bg");
   intro.classList.add("fade-out");
+
   setTimeout(() => {
     intro.style.display = "none";
     snowContainer.style.display = "none";
+
+    main.removeAttribute("style");
+    questionBox.style.display = "";
+    questionBox.classList.remove("fade-out-question");
+    resultText.style.opacity = 0;
+    resultText.textContent = "";
+
     main.classList.add("show");
     main.setAttribute("aria-hidden", "false");
     backBtn.style.display = "block";
   }, 600);
 });
 
-// Bông tuyết
 function createSnowflake() {
   const snow = document.createElement("div");
   snow.classList.add("snowflake");
@@ -382,8 +390,9 @@ function createSnowflake() {
   snowContainer.appendChild(snow);
   setTimeout(() => snow.remove(), 10000);
 }
+
 setInterval(() => {
-  if (intro.style.display !== "none") createSnowflake();
+  if (!intro.classList.contains("fade-out")) createSnowflake();
 }, 180);
 </script>
 
