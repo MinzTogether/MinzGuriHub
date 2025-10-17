@@ -39,6 +39,12 @@
       to { transform: translateY(-120px); }
     }
 
+    body.brighten-bg::before {
+      opacity: 0.3;
+      filter: blur(1px);
+      transition: opacity 1s ease, filter 1s ease;
+    }
+
     #container {
       position: relative;
       z-index: 1;
@@ -50,6 +56,31 @@
       justify-content: center;
     }
 
+    /* Bông tuyết */
+    #snow-container {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: #ff99ff;
+      font-size: 12px;
+      opacity: 0.6;
+      filter: drop-shadow(0 0 6px rgba(255,153,255,0.7));
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
     /* Intro */
     #intro {
       text-align: center;
@@ -58,6 +89,8 @@
       padding: 36px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       backdrop-filter: blur(6px);
+      position: relative;
+      z-index: 2;
     }
 
     /* Fade-out khi bấm Start */
@@ -69,7 +102,7 @@
     }
 
     h1 {
-      font-size: 36px; /* ↓ chỉnh từ 40 xuống 36 */
+      font-size: 36px;
       margin-bottom: 12px;
       letter-spacing: 1px;
       font-weight: 700;
@@ -77,6 +110,7 @@
       transform: translateY(40px);
       animation: fadeUpBounce 1s ease forwards;
       animation-delay: 0.2s;
+      text-shadow: 0 0 12px rgba(168,85,247,0.35);
     }
 
     p.lead {
@@ -86,31 +120,41 @@
       opacity: 0;
       transform: translateY(40px);
       animation: fadeUpBounce 1s ease forwards;
-      animation-delay: 0.6s;
+      animation-delay: 0.5s;
     }
 
+    /* Nút */
     .button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
       margin: 8px;
       padding: 10px 26px;
-      border: 2px solid #a855f7;
+      border: 2px solid #a855f7; /* viền tím */
       border-radius: 10px;
-      background-color: rgba(168, 85, 247, 0.07);
+      background-color: rgba(0,0,0,0.4);
       color: white;
       font-size: 18px;
       cursor: pointer;
-      transition: transform 0.25s ease, background-color 0.25s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
       user-select: none;
       opacity: 0;
       transform: translateY(40px);
       animation: fadeUpBounce 1s ease forwards;
-      animation-delay: 1.0s;
+      animation-delay: 0.8s;
     }
 
-    .button:focus { outline: 3px solid rgba(168,85,247,0.18); outline-offset: 4px; }
-    .button:hover { transform: translateY(-3px); background-color: rgba(168,85,247,0.16); }
+    .button:hover {
+      transform: translateY(-3px);
+      background-color: rgba(168,85,247,0.15);
+      box-shadow: 0 0 14px rgba(168,85,247,0.4);
+    }
+
+    .button:focus {
+      outline: 3px solid rgba(168,85,247,0.25);
+      outline-offset: 4px;
+    }
 
     /* Animation xuất hiện mượt + nảy nhẹ */
     @keyframes fadeUpBounce {
@@ -127,8 +171,8 @@
       left: 50%;
       transform: translateX(-50%) translateY(-10px);
       background: rgba(0,0,0,0.9);
-      border: 2px solid #00ff00;
-      color: #00ff00;
+      border: 2px solid #a855f7;
+      color: #a855f7;
       padding: 10px 20px;
       border-radius: 10px;
       opacity: 0;
@@ -157,8 +201,7 @@
     }
     #main.show {
       display: block;
-      opacity: 1;
-      transform: translateY(0);
+      animation: fadeUpBounce 1.2s cubic-bezier(.17,.67,.83,.67) forwards;
     }
     #main h2 {
       font-size: 32px;
@@ -170,7 +213,7 @@
     @media (max-width: 520px) {
       h1 { font-size: 24px; }
       p.lead { font-size: 16px; }
-      .button { font-size: 16px; padding: 10px 18px; }
+      .button { width: 100%; font-size: 16px; padding: 10px 18px; margin: 6px 0; }
       #container { padding: 20px; }
     }
 
@@ -183,14 +226,16 @@
 
   <div id="notify" role="status" aria-live="polite">Đã copy link Facebook</div>
 
+  <div id="snow-container"></div>
+
   <div id="container">
     <!-- Intro -->
     <div id="intro" aria-label="Intro">
       <h1>Create by: MinzGuri (Bảo 10A6)</h1>
       <p class="lead">Facebook: Minz Guri (Minzy)</p>
       <div>
-        <button class="button" id="copyBtn">📋 Copy Facebook link</button>
-        <button class="button" id="startBtn">🚀 Start</button>
+        <button class="button" id="copyBtn">⧉ Copy Facebook link</button>
+        <button class="button" id="startBtn">▶ Start</button>
       </div>
     </div>
 
@@ -207,14 +252,17 @@
     const notify = document.getElementById("notify");
     const intro = document.getElementById("intro");
     const main = document.getElementById("main");
+    const snowContainer = document.getElementById("snow-container");
     const FB_LINK = "https://www.facebook.com/share/1PSmzcHWvU/";
 
+    // Hiển thị thông báo
     function showNotify(text = "Đã copy link Facebook", duration = 2200) {
       notify.textContent = text;
       notify.classList.add("show");
       setTimeout(() => notify.classList.remove("show"), duration);
     }
 
+    // Copy link
     function copyText(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         return navigator.clipboard.writeText(text);
@@ -242,14 +290,48 @@
         .catch(() => showNotify("Không thể copy. Hãy copy thủ công.", 3000));
     });
 
+    // Hiệu ứng start
     startBtn.addEventListener("click", () => {
+      document.body.classList.add("brighten-bg");
       intro.classList.add("fade-out");
       setTimeout(() => {
         intro.style.display = "none";
+        snowContainer.style.display = "none";
         main.classList.add("show");
         main.setAttribute("aria-hidden", "false");
       }, 600);
     });
+
+    // Tạo hiệu ứng bông tuyết hồng lung linh
+    function createSnowflake() {
+      const snow = document.createElement("div");
+      snow.classList.add("snowflake");
+      snow.textContent = "❄";
+      const left = Math.random() * 100;
+      const size = 10 + Math.random() * 20;
+      const opacity = 0.4 + Math.random() * 0.6;
+      const duration = 5 + Math.random() * 10;
+      const delay = Math.random() * 3;
+      const vanishEarly = Math.random() > 0.7; // có 30% rơi nửa chừng rồi biến mất
+
+      snow.style.left = left + "vw";
+      snow.style.fontSize = size + "px";
+      snow.style.opacity = opacity;
+      snow.style.animationDuration = duration + "s";
+      snow.style.animationDelay = delay + "s";
+
+      if (vanishEarly) {
+        setTimeout(() => snow.remove(), (duration * 700));
+      } else {
+        setTimeout(() => snow.remove(), (duration * 1000));
+      }
+
+      snowContainer.appendChild(snow);
+    }
+
+    setInterval(() => {
+      if (intro.style.display !== "none") createSnowflake();
+    }, 180);
   </script>
 
 </body>
