@@ -4,16 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MinzGuriHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      height: 100vh;
-      width: 100%;
+      position: relative;
+      min-height: 100vh;
       background: radial-gradient(circle at center, #0a0018, #000010);
       color: white;
       font-family: "Poppins", sans-serif;
@@ -23,46 +20,104 @@
       overflow: hidden;
     }
 
-    /* Intro container */
-    #intro {
-      text-align: center;
-      animation: fadeZoom 1.8s ease forwards;
+    /* Nền hạt sáng */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 4px 4px;
+      animation: moveStars 40s linear infinite;
+      opacity: 0.7;
+      z-index: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
     }
 
-    @keyframes fadeZoom {
-      0% { opacity: 0; transform: scale(0.8); filter: blur(5px); }
-      50% { opacity: 1; transform: scale(1.05); filter: blur(0); }
-      100% { opacity: 1; transform: scale(1); }
+    @keyframes moveStars {
+      from { transform: translateY(0); }
+      to { transform: translateY(-120px); }
+    }
+
+    #container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 900px;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Intro */
+    #intro {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+    }
+
+    /* Fade-out khi bấm Start */
+    .fade-out {
+      opacity: 0 !important;
+      transform: scale(0.95) translateY(8px) !important;
+      pointer-events: none;
+      transition: all 0.6s ease;
     }
 
     h1 {
-      font-size: 40px;
-      margin-bottom: 15px;
+      font-size: 36px; /* ↓ chỉnh từ 40 xuống 36 */
+      margin-bottom: 12px;
       letter-spacing: 1px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUpBounce 1s ease forwards;
+      animation-delay: 0.2s;
     }
 
-    p {
-      font-size: 26px;
-      margin-bottom: 25px;
+    p.lead {
+      font-size: 20px;
+      margin-bottom: 22px;
       color: #cfcfcf;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUpBounce 1s ease forwards;
+      animation-delay: 0.6s;
     }
 
     .button {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       margin: 8px;
       padding: 10px 26px;
       border: 2px solid #a855f7;
       border-radius: 10px;
-      background-color: rgba(168, 85, 247, 0.1);
+      background-color: rgba(168, 85, 247, 0.07);
       color: white;
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.25s ease, background-color 0.25s ease;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUpBounce 1s ease forwards;
+      animation-delay: 1.0s;
     }
 
-    .button:hover {
-      background-color: rgba(168, 85, 247, 0.25);
-      transform: scale(1.05);
+    .button:focus { outline: 3px solid rgba(168,85,247,0.18); outline-offset: 4px; }
+    .button:hover { transform: translateY(-3px); background-color: rgba(168,85,247,0.16); }
+
+    /* Animation xuất hiện mượt + nảy nhẹ */
+    @keyframes fadeUpBounce {
+      0% { opacity: 0; transform: translateY(40px) scale(0.97); }
+      60% { opacity: 1; transform: translateY(-8px) scale(1.02); }
+      80% { transform: translateY(3px) scale(0.99); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     /* Notification */
@@ -70,57 +125,80 @@
       position: fixed;
       top: 20px;
       left: 50%;
-      transform: translateX(-50%);
-      background: #000;
+      transform: translateX(-50%) translateY(-10px);
+      background: rgba(0,0,0,0.9);
       border: 2px solid #00ff00;
       color: #00ff00;
       padding: 10px 20px;
       border-radius: 10px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.5s ease;
-      z-index: 1000;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 2000;
+      font-weight: 600;
     }
-
     #notify.show {
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
     }
 
     /* Main content */
     #main {
       display: none;
       text-align: center;
-      animation: fadeInMain 0.8s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+      background: linear-gradient(180deg, rgba(168,85,247,0.02), rgba(168,85,247,0.01));
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
-
-    @keyframes fadeInMain {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    #main.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
     }
-
     #main h2 {
       font-size: 32px;
       color: #a855f7;
+      margin-bottom: 8px;
+    }
+    #main p { color: #d6d6d6; }
+
+    @media (max-width: 520px) {
+      h1 { font-size: 24px; }
+      p.lead { font-size: 16px; }
+      .button { font-size: 16px; padding: 10px 18px; }
+      #container { padding: 20px; }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
   </style>
 </head>
 <body>
 
-  <div id="notify">Đã copy link Facebook</div>
+  <div id="notify" role="status" aria-live="polite">Đã copy link Facebook</div>
 
-  <!-- Intro -->
-  <div id="intro">
-    <h1>Create by: MinzGuri (Bảo 10A6)</h1>
-    <p>Facebook: Minz Guri (Minzy)</p>
-    <button class="button" id="copyBtn">Copy Facebook link</button>
-    <button class="button" id="startBtn">Start</button>
-  </div>
+  <div id="container">
+    <!-- Intro -->
+    <div id="intro" aria-label="Intro">
+      <h1>Create by: MinzGuri (Bảo 10A6)</h1>
+      <p class="lead">Facebook: Minz Guri (Minzy)</p>
+      <div>
+        <button class="button" id="copyBtn">📋 Copy Facebook link</button>
+        <button class="button" id="startBtn">🚀 Start</button>
+      </div>
+    </div>
 
-  <!-- Main content -->
-  <div id="main">
-    <h2>✨ Đây là nội dung chính của MinzGuriHub ✨</h2>
-    <p>Bạn có thể thêm intro 20/10 hoặc hiệu ứng khác tại đây.</p>
+    <!-- Main content -->
+    <div id="main" aria-hidden="true">
+      <h2>✨ Đây là nội dung chính của MinzGuriHub ✨</h2>
+      <p>Bạn có thể thêm intro 20/10 hoặc hiệu ứng khác tại đây.</p>
+    </div>
   </div>
 
   <script>
@@ -129,24 +207,50 @@
     const notify = document.getElementById("notify");
     const intro = document.getElementById("intro");
     const main = document.getElementById("main");
+    const FB_LINK = "https://www.facebook.com/share/1PSmzcHWvU/";
+
+    function showNotify(text = "Đã copy link Facebook", duration = 2200) {
+      notify.textContent = text;
+      notify.classList.add("show");
+      setTimeout(() => notify.classList.remove("show"), duration);
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      } else {
+        return new Promise((resolve, reject) => {
+          try {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            const ok = document.execCommand("copy");
+            document.body.removeChild(ta);
+            if (ok) resolve();
+            else reject(new Error("execCommand failed"));
+          } catch (e) { reject(e); }
+        });
+      }
+    }
 
     copyBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText("https://www.facebook.com/share/1PSmzcHWvU/")
-        .then(() => {
-          notify.classList.add("show");
-          setTimeout(() => {
-            notify.classList.remove("show");
-          }, 2000);
-        });
+      copyText(FB_LINK)
+        .then(() => showNotify("Đã copy link Facebook"))
+        .catch(() => showNotify("Không thể copy. Hãy copy thủ công.", 3000));
     });
 
     startBtn.addEventListener("click", () => {
-      intro.style.display = "none";
-      main.style.display = "block";
+      intro.classList.add("fade-out");
+      setTimeout(() => {
+        intro.style.display = "none";
+        main.classList.add("show");
+        main.setAttribute("aria-hidden", "false");
+      }, 600);
     });
   </script>
 
 </body>
 </html>
-
-
