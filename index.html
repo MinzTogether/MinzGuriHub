@@ -93,7 +93,6 @@
       z-index: 2;
     }
 
-    /* Fade-out khi bấm Start */
     .fade-out {
       opacity: 0 !important;
       transform: scale(0.95) translateY(8px) !important;
@@ -104,7 +103,6 @@
     h1 {
       font-size: 36px;
       margin-bottom: 12px;
-      letter-spacing: 1px;
       font-weight: 700;
       opacity: 0;
       transform: translateY(40px);
@@ -123,7 +121,6 @@
       animation-delay: 0.5s;
     }
 
-    /* Nút */
     .button {
       display: inline-flex;
       align-items: center;
@@ -131,7 +128,7 @@
       gap: 10px;
       margin: 8px;
       padding: 10px 26px;
-      border: 2px solid #a855f7; /* viền tím */
+      border: 2px solid #a855f7;
       border-radius: 10px;
       background-color: rgba(0,0,0,0.4);
       color: white;
@@ -151,12 +148,6 @@
       box-shadow: 0 0 14px rgba(168,85,247,0.4);
     }
 
-    .button:focus {
-      outline: 3px solid rgba(168,85,247,0.25);
-      outline-offset: 4px;
-    }
-
-    /* Animation xuất hiện mượt + nảy nhẹ */
     @keyframes fadeUpBounce {
       0% { opacity: 0; transform: translateY(40px) scale(0.97); }
       60% { opacity: 1; transform: translateY(-8px) scale(1.02); }
@@ -164,7 +155,6 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Notification */
     #notify {
       position: fixed;
       top: 20px;
@@ -181,13 +171,8 @@
       z-index: 2000;
       font-weight: 600;
     }
-    #notify.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      pointer-events: auto;
-    }
+    #notify.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* Main content */
     #main {
       display: none;
       text-align: center;
@@ -203,12 +188,57 @@
       display: block;
       animation: fadeUpBounce 1.2s cubic-bezier(.17,.67,.83,.67) forwards;
     }
-    #main h2 {
-      font-size: 32px;
-      color: #a855f7;
-      margin-bottom: 8px;
-    }
+    #main h2 { font-size: 32px; color: #a855f7; margin-bottom: 8px; }
     #main p { color: #d6d6d6; }
+
+    /* Nút quay lại cố định */
+    #backBtn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      border: 2px solid #a855f7;
+      border-radius: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+      z-index: 1000;
+      font-size: 16px;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 10px rgba(168,85,247,0.3);
+      display: none; /* ẩn mặc định ở intro */
+    }
+    #backBtn:hover { background: rgba(168,85,247,0.25); }
+
+    #questionBox {
+      max-width: 700px;
+      margin: 100px auto 0;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      animation: fadeUpBounce 1s ease forwards;
+    }
+    #questionBox h2 { font-size: 26px; margin-bottom: 24px; }
+    .options { display: flex; justify-content: center; gap: 20px; }
+    .choice {
+      padding: 12px 28px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      color: white;
+      transition: transform 0.25s ease;
+    }
+    .choice.no { background-color: rgba(255, 50, 50, 0.6); }
+    .choice.yes { background-color: rgba(50, 200, 50, 0.6); }
+    .choice:hover { transform: translateY(-3px) scale(1.05); }
+    #resultText { margin-top: 60px; font-size: 22px; opacity: 0; transition: opacity 0.8s ease; color: #a855f7; }
+    #emojiContainer { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; }
+    .emoji { position: absolute; bottom: -40px; animation: floatUp linear forwards; }
+    @keyframes floatUp { 0%{transform:translateY(0);}100%{transform:translateY(-110vh);opacity:0;} }
+    .fade-out-question { transform: scale(0.95); opacity: 0; transition: all 0.6s ease; }
 
     @media (max-width: 520px) {
       h1 { font-size: 24px; }
@@ -216,21 +246,17 @@
       .button { width: 100%; font-size: 16px; padding: 10px 18px; margin: 6px 0; }
       #container { padding: 20px; }
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
-    }
   </style>
 </head>
 <body>
 
-  <div id="notify" role="status" aria-live="polite">Đã copy link Facebook</div>
-
+  <div id="notify">Đã copy link Facebook</div>
   <div id="snow-container"></div>
+  <button id="backBtn">⬅ Quay lại</button>
 
   <div id="container">
     <!-- Intro -->
-    <div id="intro" aria-label="Intro">
+    <div id="intro">
       <h1>Create by: MinzGuri (Bảo 10A6)</h1>
       <p class="lead">Facebook: Minz Guri (Minzy)</p>
       <div>
@@ -239,242 +265,127 @@
       </div>
     </div>
 
-<!-- Main content -->
-<div id="main" aria-hidden="true">
-  <button id="backBtn">⬅ Quay lại</button>
-  <div id="questionBox">
-    <h2>Trước khi bắt đầu, cô có muốn xem<br>lịch sử ra đời của ngày 20/10 không ạaa?</h2>
-    <div class="options">
-      <button id="noBtn" class="choice no">Không 😢</button>
-      <button id="yesBtn" class="choice yes">Có 😄</button>
+    <!-- Main content -->
+    <div id="main">
+      <div id="questionBox">
+        <h2>Trước khi bắt đầu, cô có muốn xem<br>lịch sử ra đời của ngày 20/10 không ạaa?</h2>
+        <div class="options">
+          <button id="noBtn" class="choice no">Không 😢</button>
+          <button id="yesBtn" class="choice yes">Có 😄</button>
+        </div>
+      </div>
+      <div id="resultText"></div>
+      <div id="emojiContainer"></div>
     </div>
   </div>
 
-  <div id="resultText"></div>
-  <div id="emojiContainer"></div>
-</div>
-
-<style>
-  #backBtn {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: rgba(0,0,0,0.4);
-    color: #fff;
-    border: 2px solid #a855f7;
-    border-radius: 10px;
-    padding: 6px 14px;
-    cursor: pointer;
-    z-index: 10;
-    font-size: 16px;
-    transition: all 0.25s ease;
-  }
-  #backBtn:hover { background: rgba(168,85,247,0.25); }
-
-  #questionBox {
-    max-width: 700px;
-    margin: 100px auto 0;
-    background: rgba(255,255,255,0.05);
-    border-radius: 16px;
-    padding: 36px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    animation: fadeUpBounce 1s ease forwards;
-  }
-  #questionBox h2 {
-    font-size: 26px;
-    color: #fff;
-    margin-bottom: 24px;
-  }
-  .options {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  .choice {
-    padding: 12px 28px;
-    font-size: 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.25s ease, opacity 0.25s ease;
-    border: none;
-    color: white;
-  }
-  .choice.no { background-color: rgba(255, 50, 50, 0.6); }
-  .choice.yes { background-color: rgba(50, 200, 50, 0.6); }
-  .choice:hover { transform: translateY(-3px) scale(1.05); }
-
-  #resultText {
-    margin-top: 60px;
-    font-size: 22px;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-    color: #a855f7;
-  }
-
-  #emojiContainer {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 5;
-  }
-
-  .emoji {
-    position: absolute;
-    bottom: -40px;
-    animation: floatUp linear forwards;
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    80% { opacity: 0.9; }
-    100% { transform: translateY(-110vh) scale(0.9); opacity: 0; }
-  }
-  .fade-out-question {
-    transform: scale(0.95);
-    opacity: 0;
-    transition: all 0.6s ease;
-  }
-</style>
-
 <script>
-  const backBtn = document.getElementById("backBtn");
-  const questionBox = document.getElementById("questionBox");
-  const resultText = document.getElementById("resultText");
-  const emojiContainer = document.getElementById("emojiContainer");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
+const backBtn = document.getElementById("backBtn");
+const questionBox = document.getElementById("questionBox");
+const resultText = document.getElementById("resultText");
+const emojiContainer = document.getElementById("emojiContainer");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const intro = document.getElementById("intro");
+const main = document.getElementById("main");
+const snowContainer = document.getElementById("snow-container");
 
-  // Quay lại intro
-  backBtn.addEventListener("click", () => {
-    main.classList.remove("show");
-    main.style.display = "none";
-    intro.style.display = "block";
-    intro.classList.remove("fade-out");
-    document.body.classList.remove("brighten-bg");
-  });
+// Nút quay lại
+backBtn.addEventListener("click", () => {
+  main.classList.remove("show");
+  main.style.display = "none";
+  intro.style.display = "block";
+  intro.classList.remove("fade-out");
+  document.body.classList.remove("brighten-bg");
+  snowContainer.style.display = "block";
+  backBtn.style.display = "none";
+});
 
-  function spawnEmoji(symbol) {
-    const e = document.createElement("div");
-    e.classList.add("emoji");
-    e.textContent = symbol;
-    const left = Math.random() * 100;
-    const size = 20 + Math.random() * 30;
-    const duration = 5 + Math.random() * 5;
-    e.style.left = left + "vw";
-    e.style.fontSize = size + "px";
-    e.style.animationDuration = duration + "s";
-    emojiContainer.appendChild(e);
-    setTimeout(() => e.remove(), duration * 1000);
-  }
+// Emoji + message
+function spawnEmoji(symbol) {
+  const e = document.createElement("div");
+  e.classList.add("emoji");
+  e.textContent = symbol;
+  e.style.left = Math.random() * 100 + "vw";
+  e.style.fontSize = 20 + Math.random() * 30 + "px";
+  e.style.animationDuration = 5 + Math.random() * 5 + "s";
+  emojiContainer.appendChild(e);
+  setTimeout(() => e.remove(), 8000);
+}
+function showMessage(msg) {
+  resultText.textContent = msg;
+  resultText.style.opacity = 1;
+}
 
-  function showMessage(msg) {
-    resultText.textContent = msg;
-    resultText.style.opacity = 1;
-  }
+// Chọn Có / Không
+yesBtn.addEventListener("click", () => {
+  backBtn.style.display = "none";
+  questionBox.classList.add("fade-out-question");
+  setTimeout(() => questionBox.style.display = "none", 600);
+  for (let i = 0; i < 12; i++) setTimeout(() => spawnEmoji("😄"), i * 200);
+  setTimeout(() => showMessage("Vậy sau đây mời cô giáo cùng xem video về lịch sử ra đời ngày 20/10 nhé! :>"), 800);
+});
+noBtn.addEventListener("click", () => {
+  backBtn.style.display = "none";
+  questionBox.classList.add("fade-out-question");
+  setTimeout(() => questionBox.style.display = "none", 600);
+  for (let i = 0; i < 10; i++) setTimeout(() => spawnEmoji("😢"), i * 200);
+  setTimeout(() => showMessage("Vậy thì ta sẽ bỏ qua video nhé!"), 800);
+});
 
-  yesBtn.addEventListener("click", () => {
-    questionBox.classList.add("fade-out-question");
-    setTimeout(() => questionBox.style.display = "none", 600);
-    for (let i = 0; i < 12; i++) setTimeout(() => spawnEmoji("😄"), i * 200);
-    setTimeout(() => showMessage("Vậy sau đây mời cô giáo cùng xem video về lịch sử ra đời ngày 20/10 nhé! :>"), 800);
-  });
+// Intro scripts
+const copyBtn = document.getElementById("copyBtn");
+const startBtn = document.getElementById("startBtn");
+const notify = document.getElementById("notify");
+const FB_LINK = "https://www.facebook.com/share/1PSmzcHWvU/";
 
-  noBtn.addEventListener("click", () => {
-    questionBox.classList.add("fade-out-question");
-    setTimeout(() => questionBox.style.display = "none", 600);
-    for (let i = 0; i < 10; i++) setTimeout(() => spawnEmoji("😢"), i * 200);
-    setTimeout(() => showMessage("Vậy thì ta sẽ bỏ qua video nhé!"), 800);
-  });
+function showNotify(text = "Đã copy link Facebook", duration = 2200) {
+  notify.textContent = text;
+  notify.classList.add("show");
+  setTimeout(() => notify.classList.remove("show"), duration);
+}
+
+function copyText(text) {
+  if (navigator.clipboard) return navigator.clipboard.writeText(text);
+  const ta = document.createElement("textarea");
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  document.execCommand("copy"); document.body.removeChild(ta);
+  return Promise.resolve();
+}
+
+copyBtn.addEventListener("click", () => {
+  copyText(FB_LINK)
+    .then(() => showNotify("Đã copy link Facebook"))
+    .catch(() => showNotify("Không thể copy. Hãy copy thủ công.", 3000));
+});
+
+startBtn.addEventListener("click", () => {
+  document.body.classList.add("brighten-bg");
+  intro.classList.add("fade-out");
+  setTimeout(() => {
+    intro.style.display = "none";
+    snowContainer.style.display = "none";
+    main.classList.add("show");
+    main.setAttribute("aria-hidden", "false");
+    backBtn.style.display = "block";
+  }, 600);
+});
+
+// Bông tuyết
+function createSnowflake() {
+  const snow = document.createElement("div");
+  snow.classList.add("snowflake");
+  snow.textContent = "❄";
+  snow.style.left = Math.random() * 100 + "vw";
+  snow.style.fontSize = 10 + Math.random() * 20 + "px";
+  snow.style.animationDuration = 5 + Math.random() * 10 + "s";
+  snowContainer.appendChild(snow);
+  setTimeout(() => snow.remove(), 10000);
+}
+setInterval(() => {
+  if (intro.style.display !== "none") createSnowflake();
+}, 180);
 </script>
 
-  <script>
-    const copyBtn = document.getElementById("copyBtn");
-    const startBtn = document.getElementById("startBtn");
-    const notify = document.getElementById("notify");
-    const intro = document.getElementById("intro");
-    const main = document.getElementById("main");
-    const snowContainer = document.getElementById("snow-container");
-    const FB_LINK = "https://www.facebook.com/share/1PSmzcHWvU/";
-
-    // Hiển thị thông báo
-    function showNotify(text = "Đã copy link Facebook", duration = 2200) {
-      notify.textContent = text;
-      notify.classList.add("show");
-      setTimeout(() => notify.classList.remove("show"), duration);
-    }
-
-    // Copy link
-    function copyText(text) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        return navigator.clipboard.writeText(text);
-      } else {
-        return new Promise((resolve, reject) => {
-          try {
-            const ta = document.createElement("textarea");
-            ta.value = text;
-            ta.style.position = "fixed";
-            ta.style.left = "-9999px";
-            document.body.appendChild(ta);
-            ta.select();
-            const ok = document.execCommand("copy");
-            document.body.removeChild(ta);
-            if (ok) resolve();
-            else reject(new Error("execCommand failed"));
-          } catch (e) { reject(e); }
-        });
-      }
-    }
-
-    copyBtn.addEventListener("click", () => {
-      copyText(FB_LINK)
-        .then(() => showNotify("Đã copy link Facebook"))
-        .catch(() => showNotify("Không thể copy. Hãy copy thủ công.", 3000));
-    });
-
-    // Hiệu ứng start
-    startBtn.addEventListener("click", () => {
-      document.body.classList.add("brighten-bg");
-      intro.classList.add("fade-out");
-      setTimeout(() => {
-        intro.style.display = "none";
-        snowContainer.style.display = "none";
-        main.classList.add("show");
-        main.setAttribute("aria-hidden", "false");
-      }, 600);
-    });
-
-    // Tạo hiệu ứng bông tuyết hồng lung linh
-    function createSnowflake() {
-      const snow = document.createElement("div");
-      snow.classList.add("snowflake");
-      snow.textContent = "❄";
-      const left = Math.random() * 100;
-      const size = 10 + Math.random() * 20;
-      const opacity = 0.4 + Math.random() * 0.6;
-      const duration = 5 + Math.random() * 10;
-      const delay = Math.random() * 3;
-      const vanishEarly = Math.random() > 0.7; // có 30% rơi nửa chừng rồi biến mất
-
-      snow.style.left = left + "vw";
-      snow.style.fontSize = size + "px";
-      snow.style.opacity = opacity;
-      snow.style.animationDuration = duration + "s";
-      snow.style.animationDelay = delay + "s";
-
-      if (vanishEarly) {
-        setTimeout(() => snow.remove(), (duration * 700));
-      } else {
-        setTimeout(() => snow.remove(), (duration * 1000));
-      }
-
-      snowContainer.appendChild(snow);
-    }
-
-    setInterval(() => {
-      if (intro.style.display !== "none") createSnowflake();
-    }, 180);
-  </script>
-
 </body>
-          </html>
+</html>
