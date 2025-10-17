@@ -239,12 +239,154 @@
       </div>
     </div>
 
-    <!-- Main content -->
-    <div id="main" aria-hidden="true">
-      <h2>✨ Đây là nội dung chính của MinzGuriHub ✨</h2>
-      <p>Bạn có thể thêm intro 20/10 hoặc hiệu ứng khác tại đây.</p>
+<!-- Main content -->
+<div id="main" aria-hidden="true">
+  <button id="backBtn">⬅ Quay lại</button>
+  <div id="questionBox">
+    <h2>Trước khi bắt đầu, cô có muốn xem<br>lịch sử ra đời của ngày 20/10 không ạaa?</h2>
+    <div class="options">
+      <button id="noBtn" class="choice no">Không 😢</button>
+      <button id="yesBtn" class="choice yes">Có 😄</button>
     </div>
   </div>
+
+  <div id="resultText"></div>
+  <div id="emojiContainer"></div>
+</div>
+
+<style>
+  #backBtn {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    border: 2px solid #a855f7;
+    border-radius: 10px;
+    padding: 6px 14px;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 16px;
+    transition: all 0.25s ease;
+  }
+  #backBtn:hover { background: rgba(168,85,247,0.25); }
+
+  #questionBox {
+    max-width: 700px;
+    margin: 100px auto 0;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    animation: fadeUpBounce 1s ease forwards;
+  }
+  #questionBox h2 {
+    font-size: 26px;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+  .options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .choice {
+    padding: 12px 28px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    border: none;
+    color: white;
+  }
+  .choice.no { background-color: rgba(255, 50, 50, 0.6); }
+  .choice.yes { background-color: rgba(50, 200, 50, 0.6); }
+  .choice:hover { transform: translateY(-3px) scale(1.05); }
+
+  #resultText {
+    margin-top: 60px;
+    font-size: 22px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    color: #a855f7;
+  }
+
+  #emojiContainer {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .emoji {
+    position: absolute;
+    bottom: -40px;
+    animation: floatUp linear forwards;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    80% { opacity: 0.9; }
+    100% { transform: translateY(-110vh) scale(0.9); opacity: 0; }
+  }
+  .fade-out-question {
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.6s ease;
+  }
+</style>
+
+<script>
+  const backBtn = document.getElementById("backBtn");
+  const questionBox = document.getElementById("questionBox");
+  const resultText = document.getElementById("resultText");
+  const emojiContainer = document.getElementById("emojiContainer");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+
+  // Quay lại intro
+  backBtn.addEventListener("click", () => {
+    main.classList.remove("show");
+    main.style.display = "none";
+    intro.style.display = "block";
+    intro.classList.remove("fade-out");
+    document.body.classList.remove("brighten-bg");
+  });
+
+  function spawnEmoji(symbol) {
+    const e = document.createElement("div");
+    e.classList.add("emoji");
+    e.textContent = symbol;
+    const left = Math.random() * 100;
+    const size = 20 + Math.random() * 30;
+    const duration = 5 + Math.random() * 5;
+    e.style.left = left + "vw";
+    e.style.fontSize = size + "px";
+    e.style.animationDuration = duration + "s";
+    emojiContainer.appendChild(e);
+    setTimeout(() => e.remove(), duration * 1000);
+  }
+
+  function showMessage(msg) {
+    resultText.textContent = msg;
+    resultText.style.opacity = 1;
+  }
+
+  yesBtn.addEventListener("click", () => {
+    questionBox.classList.add("fade-out-question");
+    setTimeout(() => questionBox.style.display = "none", 600);
+    for (let i = 0; i < 12; i++) setTimeout(() => spawnEmoji("😄"), i * 200);
+    setTimeout(() => showMessage("Vậy sau đây mời cô giáo cùng xem video về lịch sử ra đời ngày 20/10 nhé! :>"), 800);
+  });
+
+  noBtn.addEventListener("click", () => {
+    questionBox.classList.add("fade-out-question");
+    setTimeout(() => questionBox.style.display = "none", 600);
+    for (let i = 0; i < 10; i++) setTimeout(() => spawnEmoji("😢"), i * 200);
+    setTimeout(() => showMessage("Vậy thì ta sẽ bỏ qua video nhé!"), 800);
+  });
+</script>
 
   <script>
     const copyBtn = document.getElementById("copyBtn");
