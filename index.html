@@ -472,14 +472,23 @@ yesBtn.addEventListener("click", () => {
     }, 2000);  
   }, 800);  
 });  
-  
 noBtn.addEventListener("click", () => {  
   backBtn.style.display = "none";  
   questionBox.classList.add("fade-out-question");  
   setTimeout(() => { questionBox.style.display = "none"; }, 600);  
-  for (let i = 0; i < 15; i++) setTimeout(() => spawnEmoji("😢"), i * 150);  
-  setTimeout(() => showMessage("Vậy thì ta sẽ bỏ qua video nhé!"), 800);  
-});  
+
+  for (let i = 0; i < 15; i++) 
+    setTimeout(() => spawnEmoji("😢"), i * 150);  
+
+  setTimeout(() => {
+    showMessage("Vậy thì ta sẽ bỏ qua video nhé!");
+
+  setTimeout(() => {
+      window.location.href = "chuc.html";
+    }, 2000);
+
+  }, 800);  
+});
   
 const copyBtn = document.getElementById("copyBtn");  
 const startBtn = document.getElementById("startBtn");  
