@@ -382,8 +382,26 @@ yesBtn.addEventListener("click", () => {
   backBtn.style.display = "none";
   questionBox.classList.add("fade-out-question");
   setTimeout(() => { questionBox.style.display = "none"; }, 600);
+
+  // Emoji hiệu ứng vui
   for (let i = 0; i < 15; i++) setTimeout(() => spawnEmoji("😄"), i * 150);
-  setTimeout(() => showMessage("Vậy sau đây mời cô giáo cùng xem video về lịch sử ra đời ngày 20/10 nhé! :>"), 800);
+
+  // Hiện dòng chờ
+  setTimeout(() => {
+    const loadingBox = document.createElement("div");
+    loadingBox.id = "loadingBox";
+    loadingBox.textContent = "Đang tải video... Cô chờ một chút nha~ 💜";
+    loadingBox.style.marginTop = "40px";
+    loadingBox.style.fontSize = "20px";
+    loadingBox.style.color = "#a855f7";
+    resultText.replaceChildren(loadingBox);
+    resultText.style.opacity = 1;
+
+    // Sau 2 giây tự chuyển sang video.html
+    setTimeout(() => {
+      window.location.href = "video.html";
+    }, 2000);
+  }, 800);
 });
 
 noBtn.addEventListener("click", () => {
