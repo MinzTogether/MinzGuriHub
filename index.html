@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MinzGuriHub</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
@@ -261,7 +262,6 @@
       color: #a855f7;
     }
 
-    /* Emoji container tự do ngoài khung */
     #emojiContainer {
       position: fixed;
       bottom: 0;
@@ -290,12 +290,63 @@
       transition: all 0.6s ease;
     }
 
+    /* === MUSIC WIDGET === */
+    .music-widget {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 3000;
+      width: 340px;
+      height: 96px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));
+      border: 2px solid rgba(255,255,255,0.06);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.6s ease;
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transform: translateY(-15px);
+      overflow: hidden;
+    }
+
+    .music-widget.visible { opacity: 1; transform: translateY(0); }
+    .music-widget.collapsed {
+      width: 60px; height: 60px; border-radius: 50%;
+      justify-content: center; align-items: center; padding: 0; gap: 0;
+      box-shadow: 0 0 20px rgba(168,85,247,0.4);
+    }
+    .music-icon { position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; flex-shrink: 0; }
+
+    .circle-anim { position: absolute; top: 0; left: 0; width: 50px; height: 50px; transform: rotate(-90deg); pointer-events: none; }
+    .circle-anim circle {
+      stroke-dasharray: 289; stroke-dashoffset: 0; stroke: #a855f7; stroke-width: 4; fill: none;
+      filter: drop-shadow(0 0 6px rgba(168,85,247,0.8)); opacity: 0.8;
+    }
+    @keyframes neonRotate {
+      from { transform: rotate(-90deg) rotate(0deg); }
+      to { transform: rotate(-90deg) rotate(360deg); }
+    }
+    .playing #musicCircle { animation: neonRotate 4s linear infinite; }
+
+    .music-info { flex: 1; display: flex; flex-direction: column; gap: 6px; color: #e6e6e6; min-width: 0; transition: opacity 0.3s ease; }
+    .collapsed .music-info { opacity: 0; pointer-events: none; }
+
+    .music-controls { display: flex; align-items: center; justify-content: center; cursor: pointer; width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: opacity 0.3s ease, background 0.3s; }
+    .music-controls:hover { background: rgba(255,255,255,0.2); }
+    .music-controls svg { width: 18px; height: 18px; fill: #fff; }
+    .collapsed .music-controls { opacity: 0; pointer-events: none; }
+
     @media (max-width: 520px) {
       h1 { font-size: 24px; }
       p.lead { font-size: 16px; }
       .button { width: 100%; font-size: 16px; padding: 10px 18px; margin: 6px 0; }
       #container { padding: 20px; }
       .choice { width: 100%; }
+      .music-widget { width: 280px; height: 84px; }
     }
   </style>
 </head>
@@ -327,10 +378,32 @@
     </div>
   </div>
 
-  <!-- Emoji container tách riêng ra ngoài -->
   <div id="emojiContainer"></div>
 
+  <!-- 🎵 Music Widget -->
+  <div class="music-widget" id="musicWidget">
+    <div class="music-icon" id="musicIcon">
+      <svg id="musicCircle" class="circle-anim" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46"></circle>
+      </svg>
+      <span>🎶</span>
+    </div>
+
+    <div class="music-info">
+      <div class="music-title">Người gieo mầm xanh</div>
+      <div class="music-sub">Đang phát...</div>
+    </div>
+
+    <div class="music-controls" id="musicControl">
+      <svg id="pauseIcon" viewBox="0 0 24 24"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+      <svg id="playIcon" viewBox="0 0 24 24" style="display:none;"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+  </div>
+
+  <audio id="bgMusic" src="20-10.mp3" loop autoplay></audio>
+
 <script>
+/* --- Script gốc của index.html --- */
 const backBtn = document.getElementById("backBtn");
 const questionBox = document.getElementById("questionBox");
 const resultText = document.getElementById("resultText");
@@ -383,10 +456,8 @@ yesBtn.addEventListener("click", () => {
   questionBox.classList.add("fade-out-question");
   setTimeout(() => { questionBox.style.display = "none"; }, 600);
 
-  // Emoji hiệu ứng vui
   for (let i = 0; i < 15; i++) setTimeout(() => spawnEmoji("😄"), i * 150);
 
-  // Hiện dòng chờ
   setTimeout(() => {
     const loadingBox = document.createElement("div");
     loadingBox.id = "loadingBox";
@@ -396,8 +467,6 @@ yesBtn.addEventListener("click", () => {
     loadingBox.style.color = "#a855f7";
     resultText.replaceChildren(loadingBox);
     resultText.style.opacity = 1;
-
-    // Sau 2 giây tự chuyển sang video.html
     setTimeout(() => {
       window.location.href = "video.html";
     }, 2000);
@@ -440,7 +509,6 @@ copyBtn.addEventListener("click", () => {
 startBtn.addEventListener("click", () => {
   document.body.classList.add("brighten-bg");
   intro.classList.add("fade-out");
-
   setTimeout(() => {
     intro.style.display = "none";
     snowContainer.style.display = "none";
@@ -466,6 +534,75 @@ function createSnowflake() {
 setInterval(() => {
   if (!intro.classList.contains("fade-out")) createSnowflake();
 }, 180);
+
+/* --- MUSIC WIDGET SCRIPT --- */
+document.addEventListener("DOMContentLoaded", () => {
+  const widget = document.getElementById("musicWidget");
+  const icon = document.getElementById("musicIcon");
+  const music = document.getElementById("bgMusic");
+  const control = document.getElementById("musicControl");
+  const playIcon = document.getElementById("playIcon");
+  const pauseIcon = document.getElementById("pauseIcon");
+  let autoCollapseTimeout;
+
+  setTimeout(() => widget.classList.add("visible"), 300);
+  setTimeout(() => widget.classList.add("collapsed", "playing"), 2300);
+
+  const tryPlay = () => {
+    music.play().then(() => {
+      widget.classList.add("playing");
+    }).catch(() => console.log("⚠️ Trình duyệt chặn autoplay."));
+  };
+  tryPlay();
+
+  const autoCollapse = () => {
+    clearTimeout(autoCollapseTimeout);
+    autoCollapseTimeout = setTimeout(() => {
+      widget.classList.add("collapsed");
+      widget.classList.add("playing");
+    }, 3000);
+  };
+
+  icon.addEventListener("click", () => {
+    if (widget.classList.contains("collapsed")) {
+      widget.classList.remove("collapsed");
+      widget.classList.remove("playing");
+      autoCollapse();
+    } else {
+      widget.classList.add("collapsed");
+      widget.classList.add("playing");
+      clearTimeout(autoCollapseTimeout);
+    }
+  });
+
+  control.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (music.paused) {
+      music.play();
+      playIcon.style.display = "none";
+      pauseIcon.style.display = "block";
+      widget.classList.add("playing");
+    } else {
+      music.pause();
+      playIcon.style.display = "block";
+      pauseIcon.style.display = "none";
+      widget.classList.remove("playing");
+    }
+    autoCollapse();
+  });
+
+  music.addEventListener("play", () => {
+    playIcon.style.display = "none";
+    pauseIcon.style.display = "block";
+    widget.classList.add("playing");
+  });
+
+  music.addEventListener("pause", () => {
+    playIcon.style.display = "block";
+    pauseIcon.style.display = "none";
+    widget.classList.remove("playing");
+  });
+});
 </script>
 
 </body>
