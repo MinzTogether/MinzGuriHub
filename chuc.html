@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lời Chúc</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@1,300&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #000;
+      color: #ffb6c1; /* Hồng pastel */
+      font-family: 'Merriweather', serif;
+      font-style: italic;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      white-space: pre-line;
+    }
+
+    #intro, #poem {
+      font-size: 22px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      text-shadow: 0 0 8px rgba(255, 182, 193, 0.4); /* ánh sáng nhẹ */
+    }
+
+    #intro.show, #poem.show {
+      opacity: 1;
+    }
+
+    #backVideo, #goHome {
+      position: fixed;
+      top: 20px;
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      border: 2px solid #a855f7;
+      border-radius: 10px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 10px rgba(168,85,247,0.3);
+      z-index: 20;
+    }
+
+    #backVideo:hover, #goHome:hover {
+      background: rgba(168,85,247,0.25);
+    }
+
+    #backVideo { left: 20px; }
+    #goHome { right: 20px; }
+  </style>
+</head>
+<body>
+
+  <!-- Nút điều hướng -->
+  <button id="backVideo" onclick="window.location.href='video.html'">⬅ Quay lại</button>
+  <button id="goHome" onclick="window.location.href='index.html'">🏠 Trang chủ</button>
+
+  <!-- Lời giới thiệu -->
+  <div id="intro">Vì em không biết làm gì nhiều nên đành tặng cô 1 bài thơ nhé...</div>
+
+  <!-- Bài thơ -->
+  <div id="poem"></div>
+
+  <script>
+    const intro = document.getElementById("intro");
+    const poem = document.getElementById("poem");
+
+    const lines = [
+      "--🌷 Tặng Cô – Người Lái Đò Thầm Lặng 🌷--",
+      "",
+      "-Cô là ngọn gió dịu êm,-",
+      "-Dìu từng giấc mộng tuổi thêm tròn đầy.-",
+      "-Bàn tay nâng cánh trời mây,-",
+      "-Viết lên con chữ, dạy bày yêu thương.-",
+      "",
+      "-Mỗi trang phấn trắng, bảng hương,-",
+      "-In bao năm tháng, vấn vương nụ cười.-",
+      "-Cô như ánh nắng giữa đời,-",
+      "-Soi đường em bước, sáng ngời niềm tin.-",
+      "",
+      "-Ngày hai mươi tháng mười xinh,-",
+      "-Em xin gửi tặng ân tình kính yêu.-",
+      "-Chúc cô sức khỏe thật nhiều,-",
+      "-Mãi luôn rạng rỡ, như chiều thu êm. 🌼-"
+    ];
+
+    function typeLine(line, callback) {
+      let index = 0;
+      let span = document.createElement("span");
+      poem.appendChild(span);
+
+      function typeChar() {
+        span.textContent += line[index];
+        index++;
+        if (index < line.length) {
+          setTimeout(typeChar, 80);
+        } else {
+          span.classList.add("show");
+          poem.appendChild(document.createElement("br"));
+          setTimeout(callback, 800);
+        }
+      }
+
+      typeChar();
+    }
+
+    intro.classList.add("show");
+
+    setTimeout(() => {
+      intro.classList.remove("show");
+      setTimeout(() => {
+        intro.style.display = "none";
+        poem.classList.add("show");
+
+        let i = 0;
+        function nextLine() {
+          if (i < lines.length) {
+            if (lines[i].trim() === "") {
+              poem.appendChild(document.createElement("br"));
+              i++;
+              nextLine();
+            } else {
+              typeLine(lines[i], nextLine);
+              i++;
+            }
+          }
+        }
+        nextLine();
+      }, 1000);
+    }, 2000);
+  </script>
+</body>
+</html>
