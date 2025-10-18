@@ -14,6 +14,7 @@
       background: radial-gradient(circle at center, #0a0018, #000010);
       overflow: hidden;
     }
+
     iframe {
       width: 90%;
       max-width: 960px;
@@ -24,15 +25,15 @@
       opacity: 0;
       animation: fadeIn 1s ease forwards;
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.97); }
       to { opacity: 1; transform: scale(1); }
     }
 
-    #backHome {
+    #backHome, #nextPage {
       position: fixed;
       top: 20px;
-      left: 20px;
       background: rgba(0,0,0,0.4);
       color: #fff;
       border: 2px solid #a855f7;
@@ -44,7 +45,18 @@
       box-shadow: 0 0 10px rgba(168,85,247,0.3);
       z-index: 10;
     }
-    #backHome:hover { background: rgba(168,85,247,0.25); }
+
+    #backHome:hover, #nextPage:hover {
+      background: rgba(168,85,247,0.25);
+    }
+
+    #backHome {
+      left: 20px;
+    }
+
+    #nextPage {
+      right: 20px;
+    }
   </style>
 </head>
 <body>
@@ -57,5 +69,6 @@
   </iframe>
 
   <button id="backHome" onclick="window.location.href='index.html'">⬅ Quay lại</button>
+  <button id="nextPage" onclick="window.location.href='chuc.html'">Tiếp theo ➡</button>
 </body>
 </html>
