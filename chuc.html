@@ -1,75 +1,162 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lời Chúc</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lời Chúc — Kiss The Rain (Rain Ver)</title>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@1,300&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: #000;
-      color: #ffb6c1; /* Hồng pastel */
-      font-family: 'Merriweather', serif;
-      font-style: italic;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      overflow: hidden;
-      white-space: pre-line;
+    :root{
+      --pink:#ffb6c1;
+      --accent:#a855f7;
+      --card-bg:rgba(0,0,0,0.45);
+    }
+    html,body{height:100%;margin:0;}
+    body{
+      min-height:100vh;
+      margin:0;
+      background:radial-gradient(circle at center, rgba(168,85,247,0.08), #000 60%);
+      color:var(--pink);
+      font-family:'Merriweather',serif;
+      font-style:italic;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      overflow-y:auto;
+      overflow-x:hidden;
+      text-align:center;
     }
 
-    #intro, #poem {
-      font-size: 22px;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-      text-shadow: 0 0 8px rgba(255, 182, 193, 0.4); /* ánh sáng nhẹ */
+    /* ----- PHẦN 1 (HEADER) ----- */
+    header{
+      width:100%;
+      padding-top:10px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      position:relative;
     }
 
-    #intro.show, #poem.show {
-      opacity: 1;
+    .musicBox{
+      background:var(--card-bg);
+      color:#fff;
+      border:2px solid rgba(168,85,247,0.85);
+      border-radius:12px;
+      padding:8px 14px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:300px;
+      justify-content:center;
+      box-shadow:0 8px 30px rgba(168,85,247,0.12);
+      backdrop-filter:blur(6px);
+    }
+    .musicTitle{ font-size:14px; font-weight:600; color:var(--pink); }
+    #musicBtn{
+      background:transparent;
+      color:#fff;
+      border:1.5px solid rgba(255,255,255,0.12);
+      padding:6px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:14px;
+      transition:all .15s ease;
+    }
+    #musicBtn:hover{ transform:translateY(-2px); border-color:rgba(168,85,247,0.95); background:rgba(168,85,247,0.05); }
+
+    #backVideo,#goHome{
+      position:absolute;
+      top:0;
+      background:rgba(0,0,0,0.4);
+      color:#fff;
+      border:2px solid var(--accent);
+      border-radius:10px;
+      padding:8px 16px;
+      cursor:pointer;
+      font-size:16px;
+      z-index:30;
+      box-shadow:0 0 10px rgba(168,85,247,0.25);
+    }
+    #backVideo{ left:20px; } #goHome{ right:20px; }
+    #backVideo:hover,#goHome:hover{ background:rgba(168,85,247,0.2); }
+
+    /* ----- ĐƯỜNG PHÂN CÁCH ----- */
+    .separator{
+      width: 100%;
+      height: 1.5px;
+      background: rgba(168,85,247,0.4);
+      margin: 20px 0;
+      border: none;
     }
 
-    #backVideo, #goHome {
-      position: fixed;
-      top: 20px;
-      background: rgba(0,0,0,0.4);
-      color: #fff;
-      border: 2px solid #a855f7;
-      border-radius: 10px;
-      padding: 8px 16px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 10px rgba(168,85,247,0.3);
-      z-index: 20;
+    /* ----- PHẦN 2 (MAIN CONTENT) ----- */
+    main{
+      max-width:920px;
+      padding:20px;
+      box-sizing:border-box;
     }
-
-    #backVideo:hover, #goHome:hover {
-      background: rgba(168,85,247,0.25);
+    #intro,#poem{
+      font-size:22px;
+      opacity:0;
+      transition:opacity 1s ease-in-out;
+      text-shadow:0 0 8px rgba(255,182,193,0.35);
+      line-height:1.9;
+      white-space:pre-line;
     }
+    #intro.show,#poem.show{ opacity:1; }
+    #poem span{ display:inline-block; white-space:pre; }
 
-    #backVideo { left: 20px; }
-    #goHome { right: 20px; }
+    .signature{
+      color:#c77dff;
+      font-size:20px;
+      font-weight:600;
+      text-shadow:0 0 8px rgba(199,125,255,0.8);
+      opacity:0;
+      transition:opacity 1s ease-in-out;
+      display:block;
+      text-align:right;
+      margin-top:20px;
+    }
+    .signature.show{ opacity:1; }
+
+    @media (max-width:600px){
+      #intro,#poem{ font-size:18px; padding:0 8px; }
+      .musicBox{ min-width:240px; gap:8px; padding:8px; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Nút điều hướng -->
-  <button id="backVideo" onclick="window.location.href='video.html'">⬅ Quay lại</button>
-  <button id="goHome" onclick="window.location.href='index.html'">🏠 Trang chủ</button>
+  <!-- PHẦN 1 -->
+  <header>
+    <button id="backVideo" onclick="window.location.href='video.html'">⬅ Quay lại</button>
+    <button id="goHome" onclick="window.location.href='index.html'">🏠 Trang chủ</button>
 
-  <!-- Lời giới thiệu -->
-  <div id="intro">Vì em không biết làm gì nhiều nên đành tặng cô 1 bài thơ nhé...</div>
+    <div class="musicBox">
+      <div class="musicTitle">🎵 Kiss The Rain — Rain Ambience</div>
+      <button id="musicBtn">▶ PLAY</button>
+    </div>
+  </header>
 
-  <!-- Bài thơ -->
-  <div id="poem"></div>
+  <div class="separator"></div>
+
+  <!-- PHẦN 2 -->
+  <main>
+    <div id="intro">Vì em không biết làm gì nhiều nên đành tặng cô 1 bài thơ nhé...</div>
+    <div id="poem"></div>
+    <span id="signature" class="signature"></span>
+  </main>
+
+  <audio id="bgAudio" loop crossorigin="anonymous">
+    <source src="https://archive.org/download/yiruma-frame-2017/Yiruma%20-%20Frame%20%282017%29/12.%20Kiss%20The%20Rain%20%28%27f%20r%20a%20m%20e%27%20Ver.%29.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
-    const intro = document.getElementById("intro");
-    const poem = document.getElementById("poem");
+    const musicBtn = document.getElementById('musicBtn');
+    const bgAudio = document.getElementById('bgAudio');
+    const intro = document.getElementById('intro');
+    const poem = document.getElementById('poem');
+    const signature = document.getElementById('signature');
 
     const lines = [
       "--🌷 Tặng Cô – Người Lái Đò Thầm Lặng 🌷--",
@@ -90,50 +177,72 @@
       "-Mãi luôn rạng rỡ, như chiều thu êm. 🌼-"
     ];
 
-    function typeLine(line, callback) {
-      let index = 0;
-      let span = document.createElement("span");
-      poem.appendChild(span);
+    let animationStarted = false;
 
-      function typeChar() {
-        span.textContent += line[index];
-        index++;
-        if (index < line.length) {
-          setTimeout(typeChar, 80);
-        } else {
-          span.classList.add("show");
-          poem.appendChild(document.createElement("br"));
-          setTimeout(callback, 800);
+    function typeLine(line, callback){
+      let i=0;
+      const span=document.createElement('span');
+      poem.appendChild(span);
+      function step(){
+        span.textContent += line[i];
+        i++;
+        if(i < line.length) setTimeout(step, 80);
+        else {
+          poem.appendChild(document.createElement('br'));
+          setTimeout(callback, 700);
         }
       }
-
-      typeChar();
+      step();
     }
 
-    intro.classList.add("show");
+    function startPoemAnimation(){
+      if(animationStarted) return;
+      animationStarted = true;
 
-    setTimeout(() => {
-      intro.classList.remove("show");
+      intro.classList.add('show');
       setTimeout(() => {
-        intro.style.display = "none";
-        poem.classList.add("show");
-
-        let i = 0;
-        function nextLine() {
-          if (i < lines.length) {
-            if (lines[i].trim() === "") {
-              poem.appendChild(document.createElement("br"));
-              i++;
-              nextLine();
+        intro.classList.remove('show');
+        setTimeout(() => {
+          intro.style.display='none';
+          poem.classList.add('show');
+          let idx=0;
+          function next(){
+            if(idx < lines.length){
+              if(lines[idx].trim() === ''){
+                poem.appendChild(document.createElement('br'));
+                idx++; next();
+              } else {
+                typeLine(lines[idx], next);
+                idx++;
+              }
             } else {
-              typeLine(lines[i], nextLine);
-              i++;
+              signature.innerHTML = `
+  <div>Bảo 10A6</div>
+  <div>— Kính tặng cô nhân ngày 20/10 —</div>
+`;
+              signature.classList.add('show');
             }
           }
+          next();
+        }, 800);
+      }, 1400);
+    }
+
+    musicBtn.addEventListener('click', async () => {
+      try {
+        if(bgAudio.paused){
+          await bgAudio.play();
+          musicBtn.textContent = '⏸ PAUSE';
+          startPoemAnimation();
+        } else {
+          bgAudio.pause();
+          musicBtn.textContent = '▶ PLAY';
         }
-        nextLine();
-      }, 1000);
-    }, 2000);
+      } catch (err) {
+        alert('Trình duyệt ngăn autoplay — vui lòng nhấn lại nút PLAY');
+      }
+    });
   </script>
+
 </body>
 </html>
