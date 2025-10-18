@@ -3,33 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Video 20/10</title>
+  <title>MinzGuriHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      margin: 0;
-      height: 100vh;
+      position: relative;
+      min-height: 100vh;
+      background: radial-gradient(circle at center, #0a0018, #000010);
+      color: white;
+      font-family: "Poppins", sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at center, #0a0018, #000010);
       overflow: hidden;
     }
-    iframe {
-      width: 90%;
-      max-width: 960px;
-      height: 540px;
-      border: 3px solid #a855f7;
-      border-radius: 14px;
-      box-shadow: 0 0 30px rgba(168,85,247,0.4);
-      opacity: 0;
-      animation: fadeIn 1s ease forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to { opacity: 1; transform: scale(1); }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 4px 4px;
+      animation: moveStars 40s linear infinite;
+      opacity: 0.7;
+      z-index: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
     }
 
-    #backHome {
+    @keyframes moveStars {
+      from { transform: translateY(0); }
+      to { transform: translateY(-120px); }
+    }
+
+    body.brighten-bg::before {
+      opacity: 0.3;
+      filter: blur(1px);
+      transition: opacity 1s ease, filter 1s ease;
+    }
+
+    #container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 900px;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #snow-container {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: #ff99ff;
+      font-size: 12px;
+      opacity: 0.6;
+      filter: drop-shadow(0 0 6px rgba(255,153,255,0.7));
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    #intro {
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+      transform: scale(0.95) translateY(8px) !important;
+      pointer-events: none;
+      transition: all 0.6s ease;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUpBounce 1s ease forwards;
+      animation-delay: 0.2s;
+      text-shadow: 0 0 12px rgba(168,85,247,0.35);
+    }
+
+    p.lead {
+      font-size: 20px;
+      margin-bottom: 22px;
+      color: #cfcfcf;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUpBounce 1s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 8px;
+      padding: 10px 26px;
+      border: 2px solid #a855f7;
+      border-radius: 10px;
+      background-color: rgba(0,0,0,0.4);
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUpBounce 1s ease forwards;
+      animation-delay: 0.8s;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      background-color: rgba(168,85,247,0.15);
+      box-shadow: 0 0 14px rgba(168,85,247,0.4);
+    }
+
+    @keyframes fadeUpBounce {
+      0% { opacity: 0; transform: translateY(40px) scale(0.97); }
+      60% { opacity: 1; transform: translateY(-8px) scale(1.02); }
+      80% { transform: translateY(3px) scale(0.99); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    #notify {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      background: rgba(0,0,0,0.9);
+      border: 2px solid #a855f7;
+      color: #a855f7;
+      padding: 10px 20px;
+      border-radius: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 2000;
+      font-weight: 600;
+    }
+    #notify.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    #main {
+      display: none;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+      background: linear-gradient(180deg, rgba(168,85,247,0.02), rgba(168,85,247,0.01));
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    #main.show {
+      display: block;
+      animation: fadeUpBounce 1.2s cubic-bezier(.17,.67,.83,.67) forwards;
+    }
+    #main h2 { font-size: 32px; color: #a855f7; margin-bottom: 8px; }
+    #main p { color: #d6d6d6; }
+
+    #backBtn {
       position: fixed;
       top: 20px;
       left: 20px;
@@ -39,23 +199,411 @@
       border-radius: 10px;
       padding: 8px 16px;
       cursor: pointer;
+      z-index: 1000;
       font-size: 16px;
       transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
       box-shadow: 0 0 10px rgba(168,85,247,0.3);
-      z-index: 10;
+      display: none;
     }
-    #backHome:hover { background: rgba(168,85,247,0.25); }
+    #backBtn:hover { background: rgba(168,85,247,0.25); }
+
+    #questionBox {
+      max-width: 700px;
+      margin: 100px auto 0;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      animation: fadeUpBounce 1s ease forwards;
+    }
+    #questionBox h2 { font-size: 26px; margin-bottom: 24px; }
+
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .choice {
+      width: 130px;
+      height: 50px;
+      font-size: 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      background-color: #000;
+      transition: all 0.25s ease;
+      font-weight: 600;
+    }
+    .choice.no {
+      border-color: #ff3333;
+      color: #ff3333;
+    }
+    .choice.no:hover {
+      background-color: rgba(255, 0, 0, 0.15);
+      transform: translateY(-3px) scale(1.05);
+    }
+    .choice.yes {
+      border-color: #00ff7f;
+      color: #00ff7f;
+    }
+    .choice.yes:hover {
+      background-color: rgba(0, 255, 127, 0.15);
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    #resultText {
+      margin-top: 60px;
+      font-size: 22px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      color: #a855f7;
+    }
+
+    #emojiContainer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    .emoji {
+      position: absolute;
+      bottom: -40px;
+      animation: floatUp linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-110vh); opacity: 0; }
+    }
+
+    .fade-out-question {
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.6s ease;
+    }
+
+    /* === MUSIC WIDGET === */
+    .music-widget {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 3000;
+      width: 340px;
+      height: 96px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));
+      border: 2px solid rgba(255,255,255,0.06);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.6s ease;
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transform: translateY(-15px);
+      overflow: hidden;
+    }
+
+    .music-widget.visible { opacity: 1; transform: translateY(0); }
+    .music-widget.collapsed {
+      width: 60px; height: 60px; border-radius: 50%;
+      justify-content: center; align-items: center; padding: 0; gap: 0;
+      box-shadow: 0 0 20px rgba(168,85,247,0.4);
+    }
+    .music-icon { position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; flex-shrink: 0; }
+
+    .circle-anim { position: absolute; top: 0; left: 0; width: 50px; height: 50px; transform: rotate(-90deg); pointer-events: none; }
+    .circle-anim circle {
+      stroke-dasharray: 289; stroke-dashoffset: 0; stroke: #a855f7; stroke-width: 4; fill: none;
+      filter: drop-shadow(0 0 6px rgba(168,85,247,0.8)); opacity: 0.8;
+    }
+    @keyframes neonRotate {
+      from { transform: rotate(-90deg) rotate(0deg); }
+      to { transform: rotate(-90deg) rotate(360deg); }
+    }
+    .playing #musicCircle { animation: neonRotate 4s linear infinite; }
+
+    .music-info { flex: 1; display: flex; flex-direction: column; gap: 6px; color: #e6e6e6; min-width: 0; transition: opacity 0.3s ease; }
+    .collapsed .music-info { opacity: 0; pointer-events: none; }
+
+    .music-controls { display: flex; align-items: center; justify-content: center; cursor: pointer; width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; transition: opacity 0.3s ease, background 0.3s; }
+    .music-controls:hover { background: rgba(255,255,255,0.2); }
+    .music-controls svg { width: 18px; height: 18px; fill: #fff; }
+    .collapsed .music-controls { opacity: 0; pointer-events: none; }
+
+    @media (max-width: 520px) {
+      h1 { font-size: 24px; }
+      p.lead { font-size: 16px; }
+      .button { width: 100%; font-size: 16px; padding: 10px 18px; margin: 6px 0; }
+      #container { padding: 20px; }
+      .choice { width: 100%; }
+      .music-widget { width: 280px; height: 84px; }
+    }
   </style>
 </head>
 <body>
-  <iframe
-    src="https://www.youtube.com/embed/2LHoGFsxuWM?autoplay=1"
-    title="Nguồn Gốc Và Ý Nghĩa Ngày Phụ Nữ Việt Nam 20/10"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen>
-  </iframe>
 
-  <button id="backHome" onclick="window.location.href='index.html'">⬅ Quay lại</button>
+  <div id="notify">Đã copy link Facebook</div>
+  <div id="snow-container"></div>
+  <button id="backBtn">⬅ Quay lại</button>
+
+  <div id="container">
+    <div id="intro">
+      <h1>Create by: MinzGuri (Bảo 10A6)</h1>
+      <p class="lead">Facebook: Minz Guri (Minzy)</p>
+      <div>
+        <button class="button" id="copyBtn">⧉ Copy Facebook link</button>
+        <button class="button" id="startBtn">▶ Start</button>
+      </div>
+    </div>
+
+    <div id="main">
+      <div id="questionBox">
+        <h2>Trước khi bắt đầu, cô có muốn xem<br>lịch sử ra đời của ngày 20/10 không ạaa?</h2>
+        <div class="options">
+          <button id="noBtn" class="choice no">Không 😢</button>
+          <button id="yesBtn" class="choice yes">Có 😄</button>
+        </div>
+      </div>
+      <div id="resultText"></div>
+    </div>
+  </div>
+
+  <div id="emojiContainer"></div>
+
+  <!-- 🎵 Music Widget -->
+  <div class="music-widget" id="musicWidget">
+    <div class="music-icon" id="musicIcon">
+      <svg id="musicCircle" class="circle-anim" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46"></circle>
+      </svg>
+      <span>🎶</span>
+    </div>
+
+    <div class="music-info">
+      <div class="music-title">Người gieo mầm xanh</div>
+      <div class="music-sub">Đang phát...</div>
+    </div>
+
+    <div class="music-controls" id="musicControl">
+      <svg id="pauseIcon" viewBox="0 0 24 24"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+      <svg id="playIcon" viewBox="0 0 24 24" style="display:none;"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+  </div>
+
+  <audio id="bgMusic" src="20-10.mp3" loop autoplay></audio>
+
+<script>
+/* --- Script gốc của index.html --- */
+const backBtn = document.getElementById("backBtn");
+const questionBox = document.getElementById("questionBox");
+const resultText = document.getElementById("resultText");
+const emojiContainer = document.getElementById("emojiContainer");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const intro = document.getElementById("intro");
+const main = document.getElementById("main");
+const snowContainer = document.getElementById("snow-container");
+
+function resetQuestionBox() {
+  questionBox.classList.remove("fade-out-question");
+  questionBox.style.display = "";
+  questionBox.style.animation = "none";
+  questionBox.offsetHeight;
+  questionBox.style.animation = "";
+  resultText.style.opacity = 0;
+  resultText.textContent = "";
+}
+
+backBtn.addEventListener("click", () => {
+  main.classList.remove("show");
+  main.setAttribute("aria-hidden", "true");
+  resetQuestionBox();
+  intro.style.display = "block";
+  intro.classList.remove("fade-out");
+  document.body.classList.remove("brighten-bg");
+  snowContainer.style.display = "block";
+  backBtn.style.display = "none";
+});
+
+function spawnEmoji(symbol) {
+  const e = document.createElement("div");
+  e.classList.add("emoji");
+  e.textContent = symbol;
+  e.style.left = Math.random() * 100 + "vw";
+  e.style.fontSize = 20 + Math.random() * 30 + "px";
+  e.style.animationDuration = 5 + Math.random() * 5 + "s";
+  emojiContainer.appendChild(e);
+  setTimeout(() => e.remove(), 8000);
+}
+
+function showMessage(msg) {
+  resultText.textContent = msg;
+  resultText.style.opacity = 1;
+}
+
+yesBtn.addEventListener("click", () => {
+  backBtn.style.display = "none";
+  questionBox.classList.add("fade-out-question");
+  setTimeout(() => { questionBox.style.display = "none"; }, 600);
+
+  for (let i = 0; i < 15; i++) setTimeout(() => spawnEmoji("😄"), i * 150);
+
+  setTimeout(() => {
+    const loadingBox = document.createElement("div");
+    loadingBox.id = "loadingBox";
+    loadingBox.textContent = "Đang tải video... Cô chờ một chút nha~ 💜";
+    loadingBox.style.marginTop = "40px";
+    loadingBox.style.fontSize = "20px";
+    loadingBox.style.color = "#a855f7";
+    resultText.replaceChildren(loadingBox);
+    resultText.style.opacity = 1;
+    setTimeout(() => {
+      window.location.href = "video.html";
+    }, 2000);
+  }, 800);
+});
+
+noBtn.addEventListener("click", () => {
+  backBtn.style.display = "none";
+  questionBox.classList.add("fade-out-question");
+  setTimeout(() => { questionBox.style.display = "none"; }, 600);
+  for (let i = 0; i < 15; i++) setTimeout(() => spawnEmoji("😢"), i * 150);
+  setTimeout(() => showMessage("Vậy thì ta sẽ bỏ qua video nhé!"), 800);
+});
+
+const copyBtn = document.getElementById("copyBtn");
+const startBtn = document.getElementById("startBtn");
+const notify = document.getElementById("notify");
+const FB_LINK = "https://www.facebook.com/share/1PSmzcHWvU/";
+
+function showNotify(text = "Đã copy link Facebook", duration = 2200) {
+  notify.textContent = text;
+  notify.classList.add("show");
+  setTimeout(() => notify.classList.remove("show"), duration);
+}
+
+function copyText(text) {
+  if (navigator.clipboard) return navigator.clipboard.writeText(text);
+  const ta = document.createElement("textarea");
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  document.execCommand("copy"); document.body.removeChild(ta);
+  return Promise.resolve();
+}
+
+copyBtn.addEventListener("click", () => {
+  copyText(FB_LINK)
+    .then(() => showNotify("Đã copy link Facebook"))
+    .catch(() => showNotify("Không thể copy. Hãy copy thủ công.", 3000));
+});
+
+startBtn.addEventListener("click", () => {
+  document.body.classList.add("brighten-bg");
+  intro.classList.add("fade-out");
+  setTimeout(() => {
+    intro.style.display = "none";
+    snowContainer.style.display = "none";
+    main.removeAttribute("style");
+    resetQuestionBox();
+    main.classList.add("show");
+    main.setAttribute("aria-hidden", "false");
+    backBtn.style.display = "block";
+  }, 600);
+});
+
+function createSnowflake() {
+  const snow = document.createElement("div");
+  snow.classList.add("snowflake");
+  snow.textContent = "❄";
+  snow.style.left = Math.random() * 100 + "vw";
+  snow.style.fontSize = 10 + Math.random() * 20 + "px";
+  snow.style.animationDuration = 5 + Math.random() * 10 + "s";
+  snowContainer.appendChild(snow);
+  setTimeout(() => snow.remove(), 10000);
+}
+
+setInterval(() => {
+  if (!intro.classList.contains("fade-out")) createSnowflake();
+}, 180);
+
+/* --- MUSIC WIDGET SCRIPT --- */
+document.addEventListener("DOMContentLoaded", () => {
+  const widget = document.getElementById("musicWidget");
+  const icon = document.getElementById("musicIcon");
+  const music = document.getElementById("bgMusic");
+  const control = document.getElementById("musicControl");
+  const playIcon = document.getElementById("playIcon");
+  const pauseIcon = document.getElementById("pauseIcon");
+  let autoCollapseTimeout;
+
+  setTimeout(() => widget.classList.add("visible"), 300);
+  setTimeout(() => widget.classList.add("collapsed", "playing"), 2300);
+
+  const tryPlay = () => {
+    music.play().then(() => {
+      widget.classList.add("playing");
+    }).catch(() => console.log("⚠️ Trình duyệt chặn autoplay."));
+  };
+  tryPlay();
+
+  const autoCollapse = () => {
+    clearTimeout(autoCollapseTimeout);
+    autoCollapseTimeout = setTimeout(() => {
+      widget.classList.add("collapsed");
+      widget.classList.add("playing");
+    }, 3000);
+  };
+
+  icon.addEventListener("click", () => {
+    if (widget.classList.contains("collapsed")) {
+      widget.classList.remove("collapsed");
+      widget.classList.remove("playing");
+      autoCollapse();
+    } else {
+      widget.classList.add("collapsed");
+      widget.classList.add("playing");
+      clearTimeout(autoCollapseTimeout);
+    }
+  });
+
+  control.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (music.paused) {
+      music.play();
+      playIcon.style.display = "none";
+      pauseIcon.style.display = "block";
+      widget.classList.add("playing");
+    } else {
+      music.pause();
+      playIcon.style.display = "block";
+      pauseIcon.style.display = "none";
+      widget.classList.remove("playing");
+    }
+    autoCollapse();
+  });
+
+  music.addEventListener("play", () => {
+    playIcon.style.display = "none";
+    pauseIcon.style.display = "block";
+    widget.classList.add("playing");
+  });
+
+  music.addEventListener("pause", () => {
+    playIcon.style.display = "block";
+    pauseIcon.style.display = "none";
+    widget.classList.remove("playing");
+  });
+});
+</script>
+
 </body>
 </html>
