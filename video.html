@@ -13,6 +13,34 @@
       justify-content: center;
       background: radial-gradient(circle at center, #0a0018, #000010);
       overflow: hidden;
+      position: relative;
+    }
+
+    /* --- ICON FALL BACKGROUND --- */
+    .falling-icon {
+      position: absolute;
+      top: -50px;
+      font-size: 24px;
+      color: #ff99cc;
+      text-shadow: 0 0 8px #ff66cc, 0 0 12px #ff3399;
+      opacity: 0.9;
+      animation: fall linear forwards;
+      pointer-events: none;
+      z-index: 0; /* đảm bảo icon nằm sau video */
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
     }
 
     iframe {
@@ -24,6 +52,8 @@
       box-shadow: 0 0 30px rgba(168,85,247,0.4);
       opacity: 0;
       animation: fadeIn 1s ease forwards;
+      position: relative;
+      z-index: 5;
     }
 
     @keyframes fadeIn {
@@ -31,9 +61,10 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    #backHome, #nextPage {
+    #backHome {
       position: fixed;
       top: 20px;
+      left: 20px;
       background: rgba(0,0,0,0.4);
       color: #fff;
       border: 2px solid #a855f7;
@@ -45,18 +76,7 @@
       box-shadow: 0 0 10px rgba(168,85,247,0.3);
       z-index: 10;
     }
-
-    #backHome:hover, #nextPage:hover {
-      background: rgba(168,85,247,0.25);
-    }
-
-    #backHome {
-      left: 20px;
-    }
-
-    #nextPage {
-      right: 20px;
-    }
+    #backHome:hover { background: rgba(168,85,247,0.25); }
   </style>
 </head>
 <body>
@@ -69,6 +89,31 @@
   </iframe>
 
   <button id="backHome" onclick="window.location.href='index.html'">⬅ Quay lại</button>
-  <button id="nextPage" onclick="window.location.href='chuc.html'">Tiếp theo ➡</button>
+
+  <script>
+    const icons = ['❤️', '🌺'];
+
+    function createFallingIcon() {
+      const icon = document.createElement('div');
+      icon.classList.add('falling-icon');
+      icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+      
+      const size = Math.random() * 30 + 20; // 20px - 50px
+      icon.style.fontSize = `${size}px`;
+      icon.style.left = `${Math.random() * 100}%`;
+      icon.style.animationDuration = `${Math.random() * 4 + 4}s`; // 4-8s
+      icon.style.opacity = Math.random() * 0.5 + 0.5; // 0.5-1
+      icon.style.filter = 'drop-shadow(0 0 8px #ff66cc) drop-shadow(0 0 15px #ff3399)';
+      
+      document.body.appendChild(icon);
+
+      icon.addEventListener('animationend', () => {
+        icon.remove();
+      });
+    }
+
+    // Tạo icon liên tục
+    setInterval(createFallingIcon, 300);
+  </script>
 </body>
 </html>
